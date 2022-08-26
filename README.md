@@ -1,12 +1,10 @@
-# Notable Takehome
+# Basic Doctors/Appointments API
 
 This application is for testing an API using Node.js, Express, Sequelize, and Docker
 
 ## Getting Started
 
 install and run Docker
-unzip notable folder
-cd notable
 
 ## Run using Docker
 
@@ -44,3 +42,10 @@ docker compose down --rmi all --volumes
 ```
 
 (Note: this will remove ALL volumes in your docker environment)
+
+## Run locally
+
+```bash
+npm install
+npm start
+```

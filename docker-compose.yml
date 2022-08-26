@@ -2,8 +2,8 @@ version : '3.8'
 
 services:
   node_backend:
-    container_name: notable
-    image: notable:0.0.1
+    container_name: basic_api
+    image: basic_api:0.0.1
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,7 +11,7 @@ services:
       - "3001:3001"
     environment:
       - EXTERNAL_PORT=3001
-      - PGDATABASE=notable_db
+      - PGDATABASE=basic_db
       - PGUSER=sonja
       - PGPASSWORD=12345
       - PGHOST=node_db
@@ -27,7 +27,7 @@ services:
     environment:
       - POSTGRES_USER=sonja
       - POSTGRES_PASSWORD=12345
-      - POSTGRES_DB=notable_db
+      - POSTGRES_DB=basic_db
     volumes:
       - nps_data:/var/lib/postgresql/data
 
