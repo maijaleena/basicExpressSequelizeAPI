@@ -8,17 +8,17 @@ This application is for testing an API using Node.js, Express, Sequelize, and Do
 git clone git@github.com:maijaleena/basicExpressSequelizeAPI.git
 ```
 
-Navigate to basicExpressSequelizeAPI folder --> open in your preferred CodeEditor
-
 ## Run using Docker
 
-install and run Docker
+Install and run Docker
+
+Navigate to the basicExpressSequelizeAPI folder in your terminal and run
 
 ```bash
 docker compose up -d --build
 ```
 
-Then, to seed the database with fake test data, run
+To seed the database with fake test data, run
 
 ```bash
 bash seed.sh
@@ -33,6 +33,8 @@ docker compose down --rmi all --volumes
 (Note: this will remove ALL volumes in your docker environment)
 
 ## Run locally
+
+Navigate to the basicExpressSequelizeAPI folder in your terminal and run
 
 ```bash
 npm install
