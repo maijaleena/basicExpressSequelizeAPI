@@ -1,0 +1,37 @@
+version : '3.8'
+
+services:
+  node_backend:
+    container_name: notable
+    image: notable:0.0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - EXTERNAL_PORT=3001
+      - PGDATABASE=notable_db
+      - PGUSER=sonja
+      - PGPASSWORD=12345
+      - PGHOST=node_db
+    depends_on:
+      - node_db
+    entrypoint:  ["/src/wait-for-it.sh", "node_db:5432", --, "node", "app/index.js"]
+
+  node_db:
+    container_name: node_db
+    image: "postgres:12"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=sonja
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=notable_db
+    volumes:
+      - nps_data:/var/lib/postgresql/data
+
+volumes:
+  nps_data: {}
+
+
