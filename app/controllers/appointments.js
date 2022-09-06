@@ -1,6 +1,11 @@
 const Appointment = require("../models/appointments");
 const Doctor = require("../models/doctors");
 
+function validInterval(appointmentTime) {
+  let minutes = appointmentTime.split(":")[1];
+  return parseInt(minutes) % 15 === 0;
+}
+
 //list of all appointments for a particular doctor and particular day
 // GET /appointments
 exports.getAll = async (req, res, next) => {
@@ -59,7 +64,7 @@ exports.createOne = async (req, res, next) => {
       kind: req.body.kind,
     };
 
-    //check interval
+    //check interval, appointments should begin at  XX:00,15,45 time intervals only
     let appointmentTime = APPOINTMENT_MODEL.time;
     if (!validInterval(appointmentTime)) {
       return res
@@ -67,11 +72,10 @@ exports.createOne = async (req, res, next) => {
         .json("new appointments must start at 15 minute intervals");
     }
 
-    //check max 3 at same time
+    //check max 3 at same time, doctor's cannot have more than 3 appointments at the same time
     const appointmentCount = await Appointment.count({
       where: {
         time: req.body.time,
-        //Note: added this AFTER:
         docFK: doctor.userId,
       },
     });
@@ -89,11 +93,6 @@ exports.createOne = async (req, res, next) => {
   }
 };
 
-function validInterval(appointmentTime) {
-  let minutes = appointmentTime.split(":")[1];
-  return parseInt(minutes) % 15 === 0;
-}
-
 exports.updateOne = async (req, res, next) => {
   try {
     const appointment = await Appointment.findOne({
@@ -103,18 +102,15 @@ exports.updateOne = async (req, res, next) => {
     });
     if (appointment) {
       //check interval
-      if (Object.keys(req.body).includes("time")) {
+      if (req.body.time) {
         if (!validInterval(req.body.time))
           return res
             .status(404)
             .json("new appointments must start at 15 minute intervals");
       }
 
-      //check max 3 at same time
-      if (
-        Object.keys(req.body).includes("time") ||
-        Object.keys(req.body).includes("docFK")
-      ) {
+      //check max 3 at same time, doctor's cannot have more than 3 appointments at the same time
+      if (req.body.time || req.body.docFK) {
         const appointmentCount = await Appointment.count({
           where: {
             time: req.body.time,
@@ -132,6 +128,7 @@ exports.updateOne = async (req, res, next) => {
     } else {
       throw { status: 401, message: "Appointment Not Found!" };
     }
+
     res.json(await appointment.update(req.body));
   } catch (error) {
     return res.status(500).json(error);
